@@ -1,11 +1,21 @@
 import { Card } from '@/components/ui/card'
+import { MediaGallery } from '@/components/MediaGallery'
 import { motion } from 'framer-motion'
 import { Gift } from '@phosphor-icons/react'
+import { useKV } from '@github/spark/hooks'
+import type { MediaItem } from '@/lib/mediaStorage'
 
 export function Mriyaty() {
+    const [mediaItems] = useKV<MediaItem[]>('wedding-media', [])
+    
+    const sectionMedia = mediaItems?.filter(item => 
+        item.section === 'mriyaty' || 
+        (item.section === 'unassigned' && item.tags?.includes('future'))
+    ) || []
+
     return (
         <div className="min-h-screen pt-28 pb-32 px-6">
-            <div className="container mx-auto max-w-4xl">
+            <div className="container mx-auto max-w-6xl">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -27,15 +37,19 @@ export function Mriyaty() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
                 >
-                    <Card className="volumetric-card p-8 text-center">
-                        <p className="font-body text-lg text-muted-foreground">
-                            Наші мрії, плани та побажання на спільне майбутнє.
-                            <br />
-                            <span className="text-sm italic mt-4 block">
-                                Використайте AI-помічник для додавання фото та побажань у цей розділ
-                            </span>
-                        </p>
-                    </Card>
+                    {sectionMedia.length === 0 ? (
+                        <Card className="volumetric-card p-8 text-center">
+                            <p className="font-body text-lg text-muted-foreground">
+                                Наші мрії, плани та побажання на спільне майбутнє.
+                                <br />
+                                <span className="text-sm italic mt-4 block">
+                                    Використайте AI-помічник для додавання фото та побажань у цей розділ
+                                </span>
+                            </p>
+                        </Card>
+                    ) : (
+                        <MediaGallery items={sectionMedia} columns={3} />
+                    )}
                 </motion.div>
             </div>
         </div>

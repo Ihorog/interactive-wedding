@@ -26,12 +26,12 @@ A modern, interactive wedding album that transforms into a family album, combini
 - **Progression**: View compact widget → Click to expand → See upcoming events/special dates → Click edit mode → Add/modify events with media attachments
 - **Success criteria**: Widget renders on all pages, signals upcoming events with badges, expands smoothly, allows event CRUD operations
 
-### 3. AI Chat Admin
-- **Functionality**: Embedded AI assistant for album management - add/remove photos, organize content across sections, manage calendar events, search by semantic tags
+### 3. AI Chat Admin & Media Management
+- **Functionality**: Embedded AI assistant for album management - upload photos/videos with drag-and-drop or file picker, automatic processing (compression for images, thumbnail generation for videos), organize content across sections, manage calendar events, search by semantic tags, Media Manager interface for bulk organization
 - **Purpose**: Enable non-technical users to manage album content without complex interfaces or technical knowledge
-- **Trigger**: Click chat icon/widget in corner
-- **Progression**: Click icon → Chat opens → User types natural language request ("add photos from first dance") or clicks file attachment icon → AI processes and organizes content → Confirmation
-- **Success criteria**: Chat accessible from all pages, file upload icon visible in input, can search/organize photos, manage events, navigate sections
+- **Trigger**: Click chat icon/widget in corner → Upload files via paperclip icon → Open Media Manager via folder icon
+- **Progression**: Click icon → Chat opens → User clicks file attachment icon → Select images/videos → Upload with progress indicator → AI processes (compress images, generate video thumbnails, extract metadata) → Files stored in KV → User can organize via Media Manager (assign sections, add titles/descriptions/tags, preview, delete) → Content appears in appropriate sections
+- **Success criteria**: Chat accessible from all pages, file upload works for images and videos (multi-file), progress indicator shows upload status, Media Manager accessible, can filter by section, edit metadata (title, description, section, tags), preview media, delete items, all changes persist via KV storage
 
 ### 4. Interactive Photo Galleries
 - **Functionality**: Lazy-loaded image galleries with sliders, lightbox viewer, smooth transitions, semantic tagging
@@ -40,12 +40,12 @@ A modern, interactive wedding album that transforms into a family album, combini
 - **Progression**: User scrolls → Images lazy load → Click photo → Lightbox opens with navigation/description/tags → Arrow keys or swipe to next → Close lightbox
 - **Success criteria**: Smooth loading on mobile/desktop, lightbox functional, semantic tags displayed, no performance issues
 
-### 5. Video Integration
-- **Functionality**: 2-3 videos per section (14-21 total), adaptive playback, optional background audio in "Любити" section, audio ducking for speech
-- **Purpose**: Bring wedding moments to life with motion and sound
-- **Trigger**: Auto-play (muted/background) or user click to play
-- **Progression**: User enters section → Video preview/poster visible → Click to play → Controls appear → Audio ducks for speech → Video ends or user navigates away
-- **Success criteria**: 14-21 videos distributed across sections, smooth playback on mobile, audio controls functional, no autoplay with sound
+### 5. Video Integration & Upload
+- **Functionality**: Upload videos through AI chat, automatic thumbnail generation, metadata extraction (duration, dimensions), video player with custom controls, organized by section with 2-3 videos per section (14-21 total), adaptive playback, optional background audio in "Любити" section
+- **Purpose**: Bring wedding moments to life with motion and sound, enable users to easily add ceremony and celebration videos
+- **Trigger**: Upload via AI chat file attachment → AI processes and generates thumbnails → Videos assigned to sections → Click to play in galleries
+- **Progression**: Upload video files → AI chat processes (extracts metadata, generates thumbnail) → User assigns to section via Media Manager → Video appears in section gallery → Click thumbnail to play → Full-screen player with controls → Seek, mute/unmute, pause/play
+- **Success criteria**: Videos upload smoothly with progress indicator, thumbnails auto-generate, playback smooth on mobile/desktop, organized in Media Manager, videos persist across sessions via KV storage, file size limit enforced (100MB)
 
 ### 6. PWA Installation & Offline
 - **Functionality**: Full PWA with manifest, service worker, "Add to Home Screen" prompt, offline caching of critical assets
