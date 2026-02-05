@@ -1,7 +1,9 @@
 import { Card } from '@/components/ui/card'
 import { MediaGallery } from '@/components/MediaGallery'
+import { VideoShowcase } from '@/components/VideoShowcase'
+import { Separator } from '@/components/ui/separator'
 import { motion } from 'framer-motion'
-import { Gift } from '@phosphor-icons/react'
+import { Gift, Video } from '@phosphor-icons/react'
 import { useKV } from '@github/spark/hooks'
 import type { MediaItem } from '@/lib/mediaStorage'
 
@@ -12,6 +14,9 @@ export function Mriyaty() {
         item.section === 'mriyaty' || 
         (item.section === 'unassigned' && item.tags?.includes('future'))
     ) || []
+
+    const videos = sectionMedia.filter(item => item.type === 'video')
+    const photos = sectionMedia.filter(item => item.type === 'image')
 
     return (
         <div className="min-h-screen pt-28 pb-32 px-6">
@@ -32,25 +37,59 @@ export function Mriyaty() {
                     </p>
                 </motion.div>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                >
-                    {sectionMedia.length === 0 ? (
-                        <Card className="volumetric-card p-8 text-center">
-                            <p className="font-body text-lg text-muted-foreground">
-                                Наші мрії, плани та побажання на спільне майбутнє.
-                                <br />
-                                <span className="text-sm italic mt-4 block">
-                                    Використайте AI-помічник для додавання фото та побажань у цей розділ
-                                </span>
+                {sectionMedia.length === 0 ? (
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                    >
+                        <Card className="volumetric-card p-12 text-center">
+                            <Video size={64} weight="duotone" className="mx-auto mb-6 text-primary" />
+                            <p className="font-body text-lg text-muted-foreground mb-4">
+                                Наші мрії, плани та побажання на спільне майбутнє
+                            </p>
+                            <p className="font-body text-sm text-muted-foreground italic">
+                                Використайте AI-помічник для додавання фото, відео та побажань у цей розділ
                             </p>
                         </Card>
-                    ) : (
-                        <MediaGallery items={sectionMedia} columns={3} />
-                    )}
-                </motion.div>
+                    </motion.div>
+                ) : (
+                    <div className="space-y-16">
+                        {videos.length > 0 && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
+                            >
+                                <VideoShowcase
+                                    videos={videos}
+                                    title="Побажання і мрії"
+                                    description="Наше спільне майбутнє"
+                                />
+                            </motion.div>
+                        )}
+
+                        {videos.length > 0 && photos.length > 0 && (
+                            <div className="flex items-center gap-4">
+                                <Separator className="flex-1" />
+                                <span className="font-ui text-xs uppercase text-muted-foreground tracking-wide">
+                                    Фотографії
+                                </span>
+                                <Separator className="flex-1" />
+                            </div>
+                        )}
+
+                        {photos.length > 0 && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                            >
+                                <MediaGallery items={photos} columns={3} />
+                            </motion.div>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     )
