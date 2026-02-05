@@ -1,6 +1,8 @@
-# Interactive Wedding Album PWA
+# Весільний Альбом Дмитра та Александри
 
-A modern, interactive wedding album that transforms into a family album, combining beautiful design with AI-powered content management and an integrated event calendar.
+Інтерактивний весільний альбом, який трансформується в сімейний альбом, поєднуючи красивий дизайн з AI-керуванням контентом та інтегрованим календарем подій.
+
+**Молодята**: Дмитро (наречений) та Александра (наречена)
 
 **Experience Qualities**:
 1. **Intimate** - Creating a warm, personal space that feels like flipping through a precious family heirloom with soft touches and romantic atmosphere

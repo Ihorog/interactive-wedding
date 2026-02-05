@@ -72,10 +72,10 @@ export function Home({ onNavigate }: HomeProps) {
                     className="text-center mb-16 golden-glow-tr"
                 >
                     <h1 className="font-display text-6xl md:text-7xl font-bold text-primary mb-6 tracking-tight">
-                        Наш Весільний Альбом
+                        Дмитро та Александра
                     </h1>
                     <p className="font-body text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                        Історія нашого кохання, збережена у фотографіях та спогадах
+                        Наш весільний альбом — історія кохання, збережена у фотографіях та спогадах
                     </p>
                 </motion.div>
 
