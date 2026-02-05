@@ -35,12 +35,12 @@
 - **Progression**: Click icon → Chat opens → User clicks file attachment icon → Select images/videos → Upload with progress indicator → AI processes (compress images, generate video thumbnails, extract metadata) → Files stored in KV → User can organize via Media Manager (assign sections, add titles/descriptions/tags, preview, delete) → Content appears in appropriate sections
 - **Success criteria**: Chat accessible from all pages, file upload works for images and videos (multi-file), progress indicator shows upload status, Media Manager accessible, can filter by section, edit metadata (title, description, section, tags), preview media, delete items, all changes persist via KV storage
 
-### 4. Interactive Photo Galleries
-- **Functionality**: Lazy-loaded image galleries with sliders, lightbox viewer, smooth transitions, semantic tagging
-- **Purpose**: Display 150-200 wedding photos beautifully and performantly
+### 4. Interactive Photo Galleries with Sample Photos
+- **Functionality**: Lazy-loaded image galleries with sliders, lightbox viewer, smooth transitions, semantic tagging, **pre-populated with sample photos** across all 7 sections (3 photos per section = 21 sample photos total) to demonstrate gallery functionality and encourage users to add their own content
+- **Purpose**: Display 150-200 wedding photos beautifully and performantly, provide immediate visual examples showing users what each section contains
 - **Trigger**: Page load (lazy), click on photo (lightbox), swipe/arrow navigation (slider)
-- **Progression**: User scrolls → Images lazy load → Click photo → Lightbox opens with navigation/description/tags → Arrow keys or swipe to next → Close lightbox
-- **Success criteria**: Smooth loading on mobile/desktop, lightbox functional, semantic tags displayed, no performance issues
+- **Progression**: App loads → useSamplePhotos hook initializes KV storage with 21 sample photos if empty → Photos distributed across sections (ayakscho, razom, lyubyty, zhyttya, pospravzhnomu, radity, mriyaty) → User scrolls → Images lazy load → Click photo → Lightbox opens with navigation/description/tags → Arrow keys or swipe to next → Close lightbox
+- **Success criteria**: Smooth loading on mobile/desktop, lightbox functional, semantic tags displayed, no performance issues, sample photos automatically populate on first visit, sample photos demonstrate each section's purpose and mood
 
 ### 5. Video Integration & Upload
 - **Functionality**: Upload videos through AI chat, automatic thumbnail generation (extracted from video at 1 second mark), metadata extraction (duration, dimensions, file size), custom video player with volumetric card styling, organized by section with featured video showcase layout (1 large featured + 2 smaller videos per section), adaptive playback with custom controls (play/pause, seek bar, mute/unmute, time display), videos displayed prominently above photos in each section with VideoShowcase component

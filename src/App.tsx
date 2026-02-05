@@ -11,12 +11,15 @@ import { CalendarWidget } from './components/CalendarWidget'
 import { AIChat } from './components/AIChat'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useSamplePhotos } from './hooks/useSamplePhotos'
 
 export type SectionId = 'home' | 'ayakscho' | 'razom' | 'lyubyty' | 'zhyttya' | 'pospravzhnomu' | 'radity' | 'mriyaty'
 
 function App() {
     const [currentSection, setCurrentSection] = useState<SectionId>('home')
     const [isChatOpen, setIsChatOpen] = useState(false)
+    
+    useSamplePhotos()
 
     const renderSection = () => {
         switch (currentSection) {
