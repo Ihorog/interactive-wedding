@@ -1,232 +1,49 @@
 import { useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import type { MediaItem } from '@/lib/mediaStorage'
-import img1 from '@/assets/images/20241001_203159.jpg'
-import img2 from '@/assets/images/_DSC5040.JPG'
-import img3 from '@/assets/images/_DSC5146.JPG'
-import img4 from '@/assets/images/_DSC5161.JPG'
 
-const samplePhotos: MediaItem[] = [
-  {
-    id: 'sample-ayakscho-1',
-    type: 'image',
-    section: 'ayakscho',
-    title: 'Перші кроки',
-    description: 'Підготовка до великого дня',
-    dataUrl: img1,
-    uploadedAt: Date.now() - 1000000,
-    tags: ['preparation', 'beginning'],
-  },
-  {
-    id: 'sample-ayakscho-2',
-    type: 'image',
-    section: 'ayakscho',
-    title: 'Хвилювання',
-    description: 'Момент перед церемонією',
-    dataUrl: img2,
-    uploadedAt: Date.now() - 900000,
-    tags: ['preparation', 'emotions'],
-  },
-  {
-    id: 'sample-ayakscho-3',
-    type: 'image',
-    section: 'ayakscho',
-    title: 'Готовність',
-    description: 'Все готово до свята',
-    dataUrl: img3,
-    uploadedAt: Date.now() - 800000,
-    tags: ['preparation', 'ready'],
-  },
-  {
-    id: 'sample-razom-1',
-    type: 'image',
-    section: 'razom',
-    title: 'Урочиста клятва',
-    description: 'Обіцянка любити один одного',
-    dataUrl: img4,
-    uploadedAt: Date.now() - 700000,
-    tags: ['ceremony', 'vows'],
-  },
-  {
-    id: 'sample-razom-2',
-    type: 'image',
-    section: 'razom',
-    title: 'Офіційний момент',
-    description: 'Церемонія розпису',
-    dataUrl: img1,
-    uploadedAt: Date.now() - 600000,
-    tags: ['ceremony', 'official'],
-  },
-  {
-    id: 'sample-razom-3',
-    type: 'image',
-    section: 'razom',
-    title: 'Разом назавжди',
-    description: 'Тепер ми одне ціле',
-    dataUrl: img2,
-    uploadedAt: Date.now() - 500000,
-    tags: ['ceremony', 'together'],
-  },
-  {
-    id: 'sample-lyubyty-1',
-    type: 'image',
-    section: 'lyubyty',
-    title: 'Ніжність',
-    description: 'Романтичний момент',
-    dataUrl: img3,
-    uploadedAt: Date.now() - 400000,
-    tags: ['romantic', 'tender'],
-  },
-  {
-    id: 'sample-lyubyty-2',
-    type: 'image',
-    section: 'lyubyty',
-    title: 'Перший поцілунок',
-    description: 'Як чоловік і дружина',
-    dataUrl: img4,
-    uploadedAt: Date.now() - 300000,
-    tags: ['romantic', 'kiss'],
-  },
-  {
-    id: 'sample-lyubyty-3',
-    type: 'image',
-    section: 'lyubyty',
-    title: 'Кохання',
-    description: 'Наш особливий момент',
-    dataUrl: img1,
-    uploadedAt: Date.now() - 200000,
-    tags: ['romantic', 'love'],
-  },
-  {
-    id: 'sample-zhyttya-1',
-    type: 'image',
-    section: 'zhyttya',
-    title: 'Щирість',
-    description: 'Живі емоції',
-    dataUrl: img2,
-    uploadedAt: Date.now() - 150000,
-    tags: ['casual', 'emotions'],
-  },
-  {
-    id: 'sample-zhyttya-2',
-    type: 'image',
-    section: 'zhyttya',
-    title: 'Справжні ми',
-    description: 'Без постановки',
-    dataUrl: img3,
-    uploadedAt: Date.now() - 140000,
-    tags: ['casual', 'natural'],
-  },
-  {
-    id: 'sample-zhyttya-3',
-    type: 'image',
-    section: 'zhyttya',
-    title: 'Спонтанність',
-    description: 'Моменти життя',
-    dataUrl: img4,
-    uploadedAt: Date.now() - 130000,
-    tags: ['casual', 'spontaneous'],
-  },
-  {
-    id: 'sample-pospravzhnomu-1',
-    type: 'image',
-    section: 'pospravzhnomu',
-    title: 'З родиною',
-    description: 'Наші близькі',
-    dataUrl: img1,
-    uploadedAt: Date.now() - 120000,
-    tags: ['guests', 'family'],
-  },
-  {
-    id: 'sample-pospravzhnomu-2',
-    type: 'image',
-    section: 'pospravzhnomu',
-    title: 'З друзями',
-    description: 'Ті, хто завжди поруч',
-    dataUrl: img2,
-    uploadedAt: Date.now() - 110000,
-    tags: ['guests', 'friends'],
-  },
-  {
-    id: 'sample-pospravzhnomu-3',
-    type: 'image',
-    section: 'pospravzhnomu',
-    title: 'Тости',
-    description: 'Привітання від гостей',
-    dataUrl: img3,
-    uploadedAt: Date.now() - 100000,
-    tags: ['guests', 'toasts'],
-  },
-  {
-    id: 'sample-radity-1',
-    type: 'image',
-    section: 'radity',
-    title: 'Перший танець',
-    description: 'Наш особливий танець',
-    dataUrl: img4,
-    uploadedAt: Date.now() - 90000,
-    tags: ['celebration', 'dance'],
-  },
-  {
-    id: 'sample-radity-2',
-    type: 'image',
-    section: 'radity',
-    title: 'Веселощі',
-    description: 'Енергія вечора',
-    dataUrl: img1,
-    uploadedAt: Date.now() - 80000,
-    tags: ['celebration', 'fun'],
-  },
-  {
-    id: 'sample-radity-3',
-    type: 'image',
-    section: 'radity',
-    title: 'Щастя',
-    description: 'Сміх і радість',
-    dataUrl: img2,
-    uploadedAt: Date.now() - 70000,
-    tags: ['celebration', 'joy'],
-  },
-  {
-    id: 'sample-mriyaty-1',
-    type: 'image',
-    section: 'mriyaty',
-    title: 'Наше майбутнє',
-    description: 'Разом назустріч мріям',
-    dataUrl: img3,
-    uploadedAt: Date.now() - 60000,
-    tags: ['future', 'dreams'],
-  },
-  {
-    id: 'sample-mriyaty-2',
-    type: 'image',
-    section: 'mriyaty',
-    title: 'Плани',
-    description: 'Все, що попереду',
-    dataUrl: img4,
-    uploadedAt: Date.now() - 50000,
-    tags: ['future', 'plans'],
-  },
-  {
-    id: 'sample-mriyaty-3',
-    type: 'image',
-    section: 'mriyaty',
-    title: 'Разом',
-    description: 'Наша спільна подорож',
-    dataUrl: img1,
-    uploadedAt: Date.now() - 40000,
-    tags: ['future', 'together'],
-  },
-]
+// 📸 Щоб додати фотографії до альбому — помістіть файли зображень
+// у папку src/assets/images/ і вони автоматично з'являться в альбомі.
+// Підтримувані формати: JPG, JPEG, PNG, GIF, WebP
+const imageModules = import.meta.glob(
+  '../assets/images/*.{jpg,JPG,jpeg,JPEG,png,PNG,gif,GIF,webp,WebP}',
+  { eager: true }
+) as Record<string, { default: string }>
+
+const SECTIONS = ['ayakscho', 'razom', 'lyubyty', 'zhyttya', 'pospravzhnomu', 'radity', 'mriyaty'] as const
+
+function buildSamplePhotos(): MediaItem[] {
+  const imageEntries = Object.entries(imageModules)
+  if (imageEntries.length === 0) return []
+
+  return imageEntries.map(([path, module], index) => {
+    const filename = path.split('/').pop()?.replace(/\.[^/.]+$/, '') || `photo-${index + 1}`
+    const section = SECTIONS[index % SECTIONS.length]
+
+    return {
+      id: `sample-${filename}-${index}`,
+      type: 'image' as const,
+      section,
+      title: filename,
+      description: '',
+      dataUrl: module.default,
+      uploadedAt: Date.now() - (imageEntries.length - index) * 10000,
+      tags: [],
+    }
+  })
+}
 
 export function useSamplePhotos() {
   const [mediaItems, setMediaItems] = useKV<MediaItem[]>('wedding-media', [])
 
   useEffect(() => {
     if (!mediaItems || mediaItems.length === 0) {
-      setMediaItems(samplePhotos)
+      const samplePhotos = buildSamplePhotos()
+      if (samplePhotos.length > 0) {
+        setMediaItems(samplePhotos)
+      }
     }
-  }, [])
+  }, [mediaItems, setMediaItems])
 
   return { mediaItems, setMediaItems }
 }
