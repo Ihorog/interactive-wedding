@@ -1,6 +1,7 @@
 import { Card } from '@/components/ui/card'
 import { MediaGallery } from '@/components/MediaGallery'
 import { VideoShowcase } from '@/components/VideoShowcase'
+import { PhotoSlider } from '@/components/PhotoSlider'
 import { Separator } from '@/components/ui/separator'
 import { motion } from 'framer-motion'
 import { Camera, Video } from '@phosphor-icons/react'
@@ -55,38 +56,66 @@ export function Zhyttya() {
                     </motion.div>
                 ) : (
                     <div className="space-y-16">
-                        {videos.length > 0 && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 }}
-                            >
-                                <VideoShowcase
-                                    videos={videos}
-                                    title="Живі моменти"
-                                    description="Щирі та неформальні миті дня"
-                                />
-                            </motion.div>
-                        )}
-
-                        {videos.length > 0 && photos.length > 0 && (
-                            <div className="flex items-center gap-4">
-                                <Separator className="flex-1" />
-                                <span className="font-ui text-xs uppercase text-muted-foreground tracking-wide">
-                                    Фотографії
-                                </span>
-                                <Separator className="flex-1" />
-                            </div>
-                        )}
-
                         {photos.length > 0 && (
                             <motion.div
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.4 }}
+                                transition={{ delay: 0.1 }}
                             >
-                                <MediaGallery items={photos} columns={3} />
+                                <div className="text-center mb-6">
+                                    <h2 className="font-display text-3xl md:text-4xl font-bold text-primary mb-2">
+                                        Жива галерея
+                                    </h2>
+                                    <p className="font-body text-muted-foreground">
+                                        Фотографії автоматично змінюються, створюючи ефект живої плівки
+                                    </p>
+                                </div>
+                                <PhotoSlider items={photos} autoPlayInterval={4000} />
                             </motion.div>
+                        )}
+
+                        {videos.length > 0 && (
+                            <>
+                                {photos.length > 0 && (
+                                    <div className="flex items-center gap-4">
+                                        <Separator className="flex-1" />
+                                        <span className="font-ui text-xs uppercase text-muted-foreground tracking-wide">
+                                            Відео
+                                        </span>
+                                        <Separator className="flex-1" />
+                                    </div>
+                                )}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 30 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.3 }}
+                                >
+                                    <VideoShowcase
+                                        videos={videos}
+                                        title="Живі моменти"
+                                        description="Щирі та неформальні миті дня"
+                                    />
+                                </motion.div>
+                            </>
+                        )}
+
+                        {photos.length > 1 && (
+                            <>
+                                <div className="flex items-center gap-4">
+                                    <Separator className="flex-1" />
+                                    <span className="font-ui text-xs uppercase text-muted-foreground tracking-wide">
+                                        Всі фотографії
+                                    </span>
+                                    <Separator className="flex-1" />
+                                </div>
+                                <motion.div
+                                    initial={{ opacity: 0, y: 30 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.5 }}
+                                >
+                                    <MediaGallery items={photos} columns={3} />
+                                </motion.div>
+                            </>
                         )}
                     </div>
                 )}
