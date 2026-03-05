@@ -105,8 +105,9 @@ export function AIChat({ isOpen, onToggle }: AIChatProps) {
 
                 const isVideo = file.type.startsWith('video/')
                 const isImage = file.type.startsWith('image/')
+                const isAudio = file.type.startsWith('audio/')
 
-                if (!isVideo && !isImage) {
+                if (!isVideo && !isImage && !isAudio) {
                     toast.error(`Файл ${file.name} пропущено - непідтримуваний формат`)
                     continue
                 }
@@ -118,7 +119,7 @@ export function AIChat({ isOpen, onToggle }: AIChatProps) {
 
                 let mediaItem: MediaItem = {
                     id: `media-${Date.now()}-${i}`,
-                    type: isVideo ? 'video' : 'image',
+                    type: isVideo ? 'video' : isAudio ? 'audio' : 'image',
                     section: 'unassigned',
                     title: file.name.replace(/\.[^/.]+$/, ''),
                     uploadedAt: Date.now(),
@@ -158,6 +159,15 @@ export function AIChat({ isOpen, onToggle }: AIChatProps) {
                         console.error('Image processing error:', error)
                         const dataUrl = await fileToDataURL(file)
                         mediaItem.dataUrl = dataUrl
+                    }
+                } else if (isAudio) {
+                    try {
+                        const dataUrl = await fileToDataURL(file)
+                        mediaItem.dataUrl = dataUrl
+                    } catch (error) {
+                        console.error('Audio processing error:', error)
+                        toast.error(`Помилка обробки аудіо ${file.name}`)
+                        continue
                     }
                 }
 
@@ -346,7 +356,7 @@ export function AIChat({ isOpen, onToggle }: AIChatProps) {
                                         ref={fileInputRef}
                                         type="file"
                                         multiple
-                                        accept="image/*,video/*"
+                                        accept="image/*,video/*,audio/*"
                                         onChange={handleFileChange}
                                         className="hidden"
                                     />

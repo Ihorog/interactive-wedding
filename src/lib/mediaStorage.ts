@@ -1,6 +1,6 @@
 export interface MediaItem {
   id: string
-  type: 'image' | 'video'
+  type: 'image' | 'video' | 'audio'
   section: string
   title?: string
   description?: string

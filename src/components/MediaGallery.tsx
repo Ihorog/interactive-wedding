@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { VideoPlayer } from '@/components/VideoPlayer'
-import { Image, Play } from '@phosphor-icons/react'
+import { Image, Play, MusicNote } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import type { MediaItem } from '@/lib/mediaStorage'
 
@@ -78,6 +78,13 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
                       </div>
                     </div>
                   </>
+                ) : item.type === 'audio' ? (
+                  <div className="w-full h-full flex flex-col items-center justify-center gap-2 bg-primary/5">
+                    <MusicNote size={48} weight="duotone" className="text-primary" />
+                    <p className="font-ui text-xs text-muted-foreground uppercase tracking-wide">
+                      Аудіо
+                    </p>
+                  </div>
                 ) : (
                   <img
                     src={item.dataUrl || item.url}
@@ -116,6 +123,21 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
                   autoPlay
                   muted={false}
                 />
+              ) : selectedItem.type === 'audio' ? (
+                <Card className="volumetric-card p-8 flex flex-col items-center gap-4">
+                  <MusicNote size={64} weight="duotone" className="text-primary" />
+                  {selectedItem.title && (
+                    <p className="font-display text-xl font-bold text-foreground">
+                      {selectedItem.title}
+                    </p>
+                  )}
+                  <audio
+                    src={selectedItem.dataUrl || selectedItem.url}
+                    controls
+                    autoPlay
+                    className="w-full max-w-md"
+                  />
+                </Card>
               ) : (
                 <Card className="volumetric-card overflow-hidden">
                   <img

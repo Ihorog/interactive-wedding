@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card'
-import { MediaGallery } from '@/components/MediaGallery'
 import { VideoShowcase } from '@/components/VideoShowcase'
+import { ParallaxGallery } from '@/components/ParallaxGallery'
 import { Separator } from '@/components/ui/separator'
 import { motion } from 'framer-motion'
 import { Star, Video } from '@phosphor-icons/react'
@@ -69,24 +69,33 @@ export function Radity() {
                             </motion.div>
                         )}
 
-                        {videos.length > 0 && photos.length > 0 && (
-                            <div className="flex items-center gap-4">
-                                <Separator className="flex-1" />
-                                <span className="font-ui text-xs uppercase text-muted-foreground tracking-wide">
-                                    Фотографії
-                                </span>
-                                <Separator className="flex-1" />
-                            </div>
-                        )}
-
                         {photos.length > 0 && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.4 }}
-                            >
-                                <MediaGallery items={photos} columns={3} />
-                            </motion.div>
+                            <>
+                                {videos.length > 0 && (
+                                    <div className="flex items-center gap-4">
+                                        <Separator className="flex-1" />
+                                        <span className="font-ui text-xs uppercase text-muted-foreground tracking-wide">
+                                            Фотографії
+                                        </span>
+                                        <Separator className="flex-1" />
+                                    </div>
+                                )}
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ delay: 0.3 }}
+                                >
+                                    <div className="text-center mb-6">
+                                        <h2 className="font-display text-3xl font-bold text-primary mb-2">
+                                            Галерея емоцій
+                                        </h2>
+                                        <p className="font-body text-muted-foreground">
+                                            Прокрутіть сторінку, щоб побачити паралакс-ефект
+                                        </p>
+                                    </div>
+                                    <ParallaxGallery items={photos} />
+                                </motion.div>
+                            </>
                         )}
                     </div>
                 )}

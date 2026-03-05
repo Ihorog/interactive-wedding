@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card'
-import { MediaGallery } from '@/components/MediaGallery'
 import { VideoShowcase } from '@/components/VideoShowcase'
+import { GuestWishesGallery } from '@/components/GuestWishesGallery'
 import { Separator } from '@/components/ui/separator'
 import { motion } from 'framer-motion'
 import { Users, Video } from '@phosphor-icons/react'
@@ -55,38 +55,47 @@ export function PoSpravzhnomu() {
                     </motion.div>
                 ) : (
                     <div className="space-y-16">
-                        {videos.length > 0 && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 }}
-                            >
-                                <VideoShowcase
-                                    videos={videos}
-                                    title="Святкування з близькими"
-                                    description="Моменти радості разом з нашими гостями"
-                                />
-                            </motion.div>
-                        )}
-
-                        {videos.length > 0 && photos.length > 0 && (
-                            <div className="flex items-center gap-4">
-                                <Separator className="flex-1" />
-                                <span className="font-ui text-xs uppercase text-muted-foreground tracking-wide">
-                                    Фотографії
-                                </span>
-                                <Separator className="flex-1" />
-                            </div>
-                        )}
-
                         {photos.length > 0 && (
                             <motion.div
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.4 }}
+                                transition={{ delay: 0.1 }}
                             >
-                                <MediaGallery items={photos} columns={3} />
+                                <div className="text-center mb-6">
+                                    <h2 className="font-display text-3xl font-bold text-primary mb-2">
+                                        Наші гості
+                                    </h2>
+                                    <p className="font-body text-muted-foreground">
+                                        Натисніть на фотографію, щоб побачити побажання
+                                    </p>
+                                </div>
+                                <GuestWishesGallery items={photos} />
                             </motion.div>
+                        )}
+
+                        {videos.length > 0 && (
+                            <>
+                                {photos.length > 0 && (
+                                    <div className="flex items-center gap-4">
+                                        <Separator className="flex-1" />
+                                        <span className="font-ui text-xs uppercase text-muted-foreground tracking-wide">
+                                            Відео
+                                        </span>
+                                        <Separator className="flex-1" />
+                                    </div>
+                                )}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 30 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.3 }}
+                                >
+                                    <VideoShowcase
+                                        videos={videos}
+                                        title="Святкування з близькими"
+                                        description="Моменти радості разом з нашими гостями"
+                                    />
+                                </motion.div>
+                            </>
                         )}
                     </div>
                 )}
