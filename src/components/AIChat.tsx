@@ -16,6 +16,7 @@ import {
   fileToDataURL,
   compressImage
 } from '@/lib/mediaStorage'
+import { inferSection, inferScene, inferMood, estimateQuality } from '@/lib/mediaProcessor'
 
 interface Message {
     id: string
@@ -142,6 +143,18 @@ export function AIChat({ isOpen, onToggle }: AIChatProps) {
                         size: file.size,
                         format: file.type
                     }
+                }
+
+                // Auto-assign section and markers using MediaProcessor
+                if (isImage || isVideo) {
+                    const autoSection = inferSection([], file.name)
+                    if (autoSection !== 'unassigned') {
+                        mediaItem.section = autoSection
+                    }
+                    const scene = inferScene([], mediaItem.section)
+                    const mood = inferMood([], mediaItem.section)
+                    const { quality } = estimateQuality(mediaItem.metadata)
+                    mediaItem.tags = [scene, mood, quality].filter(Boolean)
                 }
 
                 if (isVideo) {

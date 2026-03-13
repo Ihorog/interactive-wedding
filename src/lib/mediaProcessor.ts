@@ -116,12 +116,15 @@ export function inferRole(index: number, total: number, aspectRatio?: number): s
   return 'grid'
 }
 
+// Default quality score when resolution is unknown
+const DEFAULT_QUALITY_SCORE = 0.7
+
 // Generate quality score (0-1) - basic heuristic from metadata
 export function estimateQuality(metadata?: { width?: number; height?: number; size?: number }): { score: number; quality: string } {
-  if (!metadata) return { score: 0.7, quality: 'ok' }
+  if (!metadata) return { score: DEFAULT_QUALITY_SCORE, quality: 'ok' }
   const { width = 0, height = 0 } = metadata
   const pixels = width * height
-  if (pixels === 0) return { score: 0.7, quality: 'ok' }
+  if (pixels === 0) return { score: DEFAULT_QUALITY_SCORE, quality: 'ok' }
   if (pixels < 640 * 480) return { score: 0.3, quality: 'warn_blur' }
   if (pixels < 1280 * 720) return { score: 0.5, quality: 'ok' }
   if (pixels >= 1920 * 1080) return { score: 0.9, quality: 'ok' }

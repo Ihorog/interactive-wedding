@@ -217,8 +217,12 @@ export function CalendarWidget({ compact = false, section }: CalendarWidgetProps
     .slice(0, 3)
 
   if (compact && section !== 'home') {
+    // Use Intl.Collator-compatible approach for locale-aware capitalization
     const weekday = now.toLocaleDateString('uk-UA', { weekday: 'long' })
-    const weekdayCapital = weekday.charAt(0).toUpperCase() + weekday.slice(1)
+    // CSS text-transform capitalize handles the rest; we ensure first char uppercase for safety
+    const weekdayDisplay = weekday.length > 0
+      ? String.fromCodePoint(weekday.codePointAt(0)!).toUpperCase() + weekday.slice(weekday.codePointAt(0)! > 0xFFFF ? 2 : 1)
+      : weekday
 
     return (
       <>
@@ -239,7 +243,7 @@ export function CalendarWidget({ compact = false, section }: CalendarWidgetProps
               <div className="flex items-center gap-2">
                 <CalendarBlank size={16} weight="duotone" className="text-[#D9B763]"/>
                 <span className="font-ui text-sm font-semibold capitalize text-foreground">
-                  {weekdayCapital}
+                  {weekdayDisplay}
                 </span>
                 {upcomingEvents.length > 0 && (
                   <Badge className="h-5 w-5 p-0 flex items-center justify-center bg-red-600 text-white text-[10px]">

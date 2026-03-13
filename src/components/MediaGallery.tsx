@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { VideoPlayer } from '@/components/VideoPlayer'
-import { Image, Play, MusicNote } from '@phosphor-icons/react'
+import { Image, Play, MusicNote, ArrowLeft, ArrowRight, X } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import type { MediaItem } from '@/lib/mediaStorage'
 
@@ -13,7 +14,29 @@ interface MediaGalleryProps {
 }
 
 export function MediaGallery({ items, columns = 3, className = '' }: MediaGalleryProps) {
-  const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null)
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
+  const selectedItem = selectedIndex !== null ? items[selectedIndex] : null
+
+  const goNext = useCallback(() => {
+    if (items.length === 0) return
+    setSelectedIndex(prev => prev !== null ? (prev + 1) % items.length : null)
+  }, [items.length])
+
+  const goPrev = useCallback(() => {
+    if (items.length === 0) return
+    setSelectedIndex(prev => prev !== null ? (prev - 1 + items.length) % items.length : null)
+  }, [items.length])
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (selectedIndex === null) return
+      if (e.key === 'ArrowRight') goNext()
+      if (e.key === 'ArrowLeft') goPrev()
+      if (e.key === 'Escape') setSelectedIndex(null)
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [selectedIndex, goNext, goPrev])
 
   const getGridCols = () => {
     switch (columns) {
@@ -56,7 +79,7 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
           >
             <Card
               className="volumetric-card overflow-hidden cursor-pointer group"
-              onClick={() => setSelectedItem(item)}
+              onClick={() => setSelectedIndex(index)}
             >
               <div className="relative aspect-video bg-muted">
                 {item.type === 'video' ? (
@@ -111,10 +134,39 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
         ))}
       </div>
 
-      <Dialog open={!!selectedItem} onOpenChange={() => setSelectedItem(null)}>
+      <Dialog open={selectedIndex !== null} onOpenChange={() => setSelectedIndex(null)}>
         <DialogContent className="max-w-5xl p-0 border-none bg-transparent">
           {selectedItem && (
-            <div className="space-y-4">
+            <div className="space-y-4 relative">
+              {/* Navigation arrows */}
+              {items.length > 1 && (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={(e) => { e.stopPropagation(); goPrev() }}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 z-50 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white backdrop-blur-sm"
+                  >
+                    <ArrowLeft size={20} />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={(e) => { e.stopPropagation(); goNext() }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 z-50 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white backdrop-blur-sm"
+                  >
+                    <ArrowRight size={20} />
+                  </Button>
+                </>
+              )}
+
+              {/* Counter */}
+              {items.length > 1 && selectedIndex !== null && (
+                <div className="absolute top-3 left-1/2 -translate-x-1/2 z-50 px-3 py-1 rounded-full bg-black/40 backdrop-blur-sm text-white font-ui text-xs">
+                  {selectedIndex + 1} / {items.length}
+                </div>
+              )}
+
               {selectedItem.type === 'video' ? (
                 <VideoPlayer
                   src={selectedItem.dataUrl || selectedItem.url || ''}
@@ -148,7 +200,7 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
                 </Card>
               )}
 
-              {(selectedItem.title || selectedItem.description) && (
+              {(selectedItem.title || selectedItem.description || (selectedItem.tags && selectedItem.tags.length > 0)) && (
                 <Card className="volumetric-card p-6">
                   {selectedItem.title && (
                     <h2 className="font-display text-2xl font-bold text-foreground mb-2">
@@ -165,9 +217,9 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
                       {selectedItem.tags.map((tag, i) => (
                         <span
                           key={i}
-                          className="px-3 py-1 rounded-full bg-primary/10 text-primary font-ui text-xs"
+                          className="px-3 py-1 rounded-full bg-[#F9E7A1]/60 text-[#4D4D4D] font-ui text-xs border border-[#EAD79A]"
                         >
-                          {tag}
+                          #{tag}
                         </span>
                       ))}
                     </div>
