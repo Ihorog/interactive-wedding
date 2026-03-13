@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useKV } from '@github/spark/hooks'
 import { toast } from 'sonner'
 import type { MediaItem } from '@/lib/mediaStorage'
+import type { SectionId } from '@/App'
 import { 
   getVideoMetadata, 
   generateVideoThumbnail, 
@@ -27,6 +28,26 @@ interface Message {
 interface AIChatProps {
     isOpen: boolean
     onToggle: () => void
+}
+
+/**
+ * Infer a section ID from the file name using common naming conventions.
+ * Falls back to 'unassigned' when no pattern matches.
+ */
+const SECTION_PATTERNS: Array<{ pattern: RegExp; section: SectionId }> = [
+    { pattern: /\b(ayakscho|yakshcho|preparation|prep|getting.?ready|bride.?prep|groom.?prep)\b/, section: 'ayakscho' },
+    { pattern: /\b(razom|ceremony|altar|church|vow|ring|wedding.?day|walk.?down|aisle)\b/, section: 'razom' },
+    { pattern: /\b(lyubyty|love|romantic|kiss|couple|portrait|duo|together)\b/, section: 'lyubyty' },
+    { pattern: /\b(zhyttya|life|casual|family|kids|everyday|candid|behind)\b/, section: 'zhyttya' },
+    { pattern: /\b(pospravzhnomu|guest|celebration|banquet|party|reception|toast|dance)\b/, section: 'pospravzhnomu' },
+    { pattern: /\b(radity|emotion|laugh|joy|fun|happy|reaction|highlight)\b/, section: 'radity' },
+    { pattern: /\b(mriyaty|dream|wish|future|sunset|sky|night|star)\b/, section: 'mriyaty' },
+]
+
+function inferSectionFromFileName(fileName: string): SectionId | 'unassigned' {
+    const name = fileName.toLowerCase()
+    const match = SECTION_PATTERNS.find(({ pattern }) => pattern.test(name))
+    return match ? match.section : 'unassigned'
 }
 
 export function AIChat({ isOpen, onToggle }: AIChatProps) {
@@ -120,7 +141,7 @@ export function AIChat({ isOpen, onToggle }: AIChatProps) {
                 let mediaItem: MediaItem = {
                     id: `media-${Date.now()}-${i}`,
                     type: isVideo ? 'video' : isAudio ? 'audio' : 'image',
-                    section: 'unassigned',
+                    section: inferSectionFromFileName(file.name),
                     title: file.name.replace(/\.[^/.]+$/, ''),
                     uploadedAt: Date.now(),
                     metadata: {

@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Card } from '@/components/ui/card'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 import { VideoPlayer } from '@/components/VideoPlayer'
-import { Image, Play, MusicNote } from '@phosphor-icons/react'
+import { Image, Play, MusicNote, CaretLeft, CaretRight } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import type { MediaItem } from '@/lib/mediaStorage'
 
@@ -13,7 +14,32 @@ interface MediaGalleryProps {
 }
 
 export function MediaGallery({ items, columns = 3, className = '' }: MediaGalleryProps) {
-  const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null)
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
+  const selectedItem = selectedIndex !== null ? items[selectedIndex] : null
+
+  const openItem = (index: number) => setSelectedIndex(index)
+  const closeItem = () => setSelectedIndex(null)
+
+  const goNext = useCallback(() => {
+    if (selectedIndex === null) return
+    setSelectedIndex((selectedIndex + 1) % items.length)
+  }, [selectedIndex, items.length])
+
+  const goPrev = useCallback(() => {
+    if (selectedIndex === null) return
+    setSelectedIndex((selectedIndex - 1 + items.length) % items.length)
+  }, [selectedIndex, items.length])
+
+  useEffect(() => {
+    if (selectedIndex === null) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); goNext() }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); goPrev() }
+      else if (e.key === 'Escape') closeItem()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedIndex, goNext, goPrev])
 
   const getGridCols = () => {
     switch (columns) {
@@ -56,7 +82,7 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
           >
             <Card
               className="volumetric-card overflow-hidden cursor-pointer group"
-              onClick={() => setSelectedItem(item)}
+              onClick={() => openItem(index)}
             >
               <div className="relative aspect-video bg-muted">
                 {item.type === 'video' ? (
@@ -111,10 +137,33 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
         ))}
       </div>
 
-      <Dialog open={!!selectedItem} onOpenChange={() => setSelectedItem(null)}>
+      <Dialog open={selectedIndex !== null} onOpenChange={(open) => { if (!open) closeItem() }}>
         <DialogContent className="max-w-5xl p-0 border-none bg-transparent">
           {selectedItem && (
             <div className="space-y-4">
+              {/* Navigation arrows */}
+              {items.length > 1 && (
+                <div className="flex justify-between items-center absolute inset-x-0 top-1/2 -translate-y-1/2 z-10 px-2 pointer-events-none">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={goPrev}
+                    aria-label="Попередній елемент"
+                    className="pointer-events-auto w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white border-none"
+                  >
+                    <CaretLeft size={24} weight="bold" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={goNext}
+                    aria-label="Наступний елемент"
+                    className="pointer-events-auto w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white border-none"
+                  >
+                    <CaretRight size={24} weight="bold" />
+                  </Button>
+                </div>
+              )}
               {selectedItem.type === 'video' ? (
                 <VideoPlayer
                   src={selectedItem.dataUrl || selectedItem.url || ''}
@@ -173,6 +222,11 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
                     </div>
                   )}
                 </Card>
+              )}
+              {items.length > 1 && selectedIndex !== null && (
+                <p className="text-center font-ui text-xs text-white/70">
+                  {selectedIndex + 1} / {items.length}
+                </p>
               )}
             </div>
           )}
