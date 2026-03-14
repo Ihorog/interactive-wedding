@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 import { VideoPlayer } from '@/components/VideoPlayer'
-import { Image, Play, MusicNote, ArrowLeft, ArrowRight, X } from '@phosphor-icons/react'
+import { Image, Play, MusicNote, CaretLeft, CaretRight } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import type { MediaItem } from '@/lib/mediaStorage'
 
@@ -17,25 +18,28 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const selectedItem = selectedIndex !== null ? items[selectedIndex] : null
 
+  const openItem = (index: number) => setSelectedIndex(index)
+  const closeItem = () => setSelectedIndex(null)
+
   const goNext = useCallback(() => {
-    if (items.length === 0) return
-    setSelectedIndex(prev => prev !== null ? (prev + 1) % items.length : null)
-  }, [items.length])
+    if (selectedIndex === null) return
+    setSelectedIndex((selectedIndex + 1) % items.length)
+  }, [selectedIndex, items.length])
 
   const goPrev = useCallback(() => {
-    if (items.length === 0) return
-    setSelectedIndex(prev => prev !== null ? (prev - 1 + items.length) % items.length : null)
-  }, [items.length])
+    if (selectedIndex === null) return
+    setSelectedIndex((selectedIndex - 1 + items.length) % items.length)
+  }, [selectedIndex, items.length])
 
   useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (selectedIndex === null) return
-      if (e.key === 'ArrowRight') goNext()
-      if (e.key === 'ArrowLeft') goPrev()
-      if (e.key === 'Escape') setSelectedIndex(null)
+    if (selectedIndex === null) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); goNext() }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); goPrev() }
+      else if (e.key === 'Escape') closeItem()
     }
-    window.addEventListener('keydown', handleKey)
-    return () => window.removeEventListener('keydown', handleKey)
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
   }, [selectedIndex, goNext, goPrev])
 
   const getGridCols = () => {
@@ -79,7 +83,7 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
           >
             <Card
               className="volumetric-card overflow-hidden cursor-pointer group"
-              onClick={() => setSelectedIndex(index)}
+              onClick={() => openItem(index)}
             >
               <div className="relative aspect-video bg-muted">
                 {item.type === 'video' ? (
@@ -134,39 +138,33 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
         ))}
       </div>
 
-      <Dialog open={selectedIndex !== null} onOpenChange={() => setSelectedIndex(null)}>
+      <Dialog open={selectedIndex !== null} onOpenChange={(open) => { if (!open) closeItem() }}>
         <DialogContent className="max-w-5xl p-0 border-none bg-transparent">
           {selectedItem && (
-            <div className="space-y-4 relative">
+            <div className="space-y-4">
               {/* Navigation arrows */}
               {items.length > 1 && (
-                <>
+                <div className="flex justify-between items-center absolute inset-x-0 top-1/2 -translate-y-1/2 z-10 px-2 pointer-events-none">
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={(e) => { e.stopPropagation(); goPrev() }}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 z-50 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white backdrop-blur-sm"
+                    onClick={goPrev}
+                    aria-label="Попередній елемент"
+                    className="pointer-events-auto w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white border-none"
                   >
-                    <ArrowLeft size={20} />
+                    <CaretLeft size={24} weight="bold" />
                   </Button>
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={(e) => { e.stopPropagation(); goNext() }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 z-50 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white backdrop-blur-sm"
+                    onClick={goNext}
+                    aria-label="Наступний елемент"
+                    className="pointer-events-auto w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white border-none"
                   >
-                    <ArrowRight size={20} />
+                    <CaretRight size={24} weight="bold" />
                   </Button>
-                </>
-              )}
-
-              {/* Counter */}
-              {items.length > 1 && selectedIndex !== null && (
-                <div className="absolute top-3 left-1/2 -translate-x-1/2 z-50 px-3 py-1 rounded-full bg-black/40 backdrop-blur-sm text-white font-ui text-xs">
-                  {selectedIndex + 1} / {items.length}
                 </div>
               )}
-
               {selectedItem.type === 'video' ? (
                 <VideoPlayer
                   src={selectedItem.dataUrl || selectedItem.url || ''}
@@ -225,6 +223,11 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
                     </div>
                   )}
                 </Card>
+              )}
+              {items.length > 1 && selectedIndex !== null && (
+                <p className="text-center font-ui text-xs text-white/70">
+                  {selectedIndex + 1} / {items.length}
+                </p>
               )}
             </div>
           )}
