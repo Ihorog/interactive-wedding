@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Wedding Album Markers Schema",
+  "version": "1.0",
+  "m_scene": {
+    "values": ["ceremony", "vows", "rings", "kiss", "first_dance", "guests", "party", "walk", "details", "portraits", "group", "decor"],
+    "description": "Scene type marker"
+  },
+  "m_mood": {
+    "values": ["romantic", "joyful", "tender", "solemn", "funny", "nostalgic", "energetic"],
+    "description": "Mood/tone marker"
+  },
+  "m_role": {
+    "values": ["hero", "spread", "grid", "slider", "quote_block", "calendar_memory"],
+    "description": "Layout role in album"
+  },
+  "m_quality": {
+    "values": ["ok", "warn_blur", "warn_dark", "warn_noise", "reject"],
+    "description": "Quality gate marker"
+  },
+  "v_type": {
+    "values": ["raw_clip", "story_candidate", "montage_generated"],
+    "description": "Video origin type"
+  },
+  "v_scene": {
+    "values": ["ceremony", "vows", "kiss", "first_dance", "guests", "party", "walk", "details", "speech"],
+    "description": "Video scene type"
+  },
+  "v_mood": {
+    "values": ["romantic", "joyful", "solemn", "energetic", "nostalgic"],
+    "description": "Video mood"
+  },
+  "sections": {
+    "ayakscho":      { "tempo": "slow",   "mood": "tender",    "scenes": ["walk", "details", "decor"] },
+    "razom":         { "tempo": "medium", "mood": "solemn",    "scenes": ["ceremony", "vows", "rings", "kiss"] },
+    "lyubyty":       { "tempo": "slow",   "mood": "romantic",  "scenes": ["kiss", "portraits", "walk"] },
+    "zhyttya":       { "tempo": "medium", "mood": "joyful",    "scenes": ["guests", "party", "group"] },
+    "pospravzhnomu": { "tempo": "medium", "mood": "energetic", "scenes": ["guests", "party", "group"] },
+    "radity":        { "tempo": "fast",   "mood": "energetic", "scenes": ["first_dance", "party", "group"] },
+    "mriyaty":       { "tempo": "slow",   "mood": "nostalgic", "scenes": ["details", "decor", "portraits"] }
+  }
+}

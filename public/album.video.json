@@ -1,0 +1,15 @@
+{
+  "$schema": "album-video-schema-v1",
+  "version": "1.0",
+  "generated": "",
+  "section_profiles": {
+    "ayakscho":      { "tempo": "slow",   "mood": "tender",    "target_clips": 2 },
+    "razom":         { "tempo": "medium", "mood": "solemn",    "target_clips": 3 },
+    "lyubyty":       { "tempo": "slow",   "mood": "romantic",  "target_clips": 2 },
+    "zhyttya":       { "tempo": "medium", "mood": "joyful",    "target_clips": 2 },
+    "pospravzhnomu": { "tempo": "medium", "mood": "energetic", "target_clips": 3 },
+    "radity":        { "tempo": "fast",   "mood": "energetic", "target_clips": 3 },
+    "mriyaty":       { "tempo": "slow",   "mood": "nostalgic", "target_clips": 2 }
+  },
+  "videos": []
+}
