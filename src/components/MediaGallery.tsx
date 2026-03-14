@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { VideoPlayer } from '@/components/VideoPlayer'
@@ -197,7 +198,7 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
                 </Card>
               )}
 
-              {(selectedItem.title || selectedItem.description) && (
+              {(selectedItem.title || selectedItem.description || (selectedItem.tags && selectedItem.tags.length > 0)) && (
                 <Card className="volumetric-card p-6">
                   {selectedItem.title && (
                     <h2 className="font-display text-2xl font-bold text-foreground mb-2">
@@ -214,9 +215,9 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
                       {selectedItem.tags.map((tag, i) => (
                         <span
                           key={i}
-                          className="px-3 py-1 rounded-full bg-primary/10 text-primary font-ui text-xs"
+                          className="px-3 py-1 rounded-full bg-[#F9E7A1]/60 text-[#4D4D4D] font-ui text-xs border border-[#EAD79A]"
                         >
-                          {tag}
+                          #{tag}
                         </span>
                       ))}
                     </div>

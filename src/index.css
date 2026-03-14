@@ -46,13 +46,13 @@
 
   --radius: 0.75rem;
   
-  --gradient-top: oklch(0.88 0.04 230);
-  --gradient-mid-blue: oklch(0.95 0.02 210);
-  --gradient-mid-cream: oklch(0.95 0.02 85);
-  --gradient-bottom: oklch(0.89 0.06 80);
-  
-  --golden-glow-light: oklch(0.96 0.08 75);
-  --golden-glow-intense: oklch(0.88 0.14 70);
+  --text-primary: #2C2C2C;
+  --text-secondary: #4D4D4D;
+  --accent-gold: #D9B763;
+  --golden-glow-light: #F9E7A1;
+  --golden-glow-intense: #E7C768;
+  --card-border: #EAD79A;
+  --card-border-hover: #F4D98A;
 }
 
 @theme {
@@ -91,10 +91,12 @@
 .gradient-wedding-bg {
   background: linear-gradient(
     187deg,
-    var(--gradient-top) 0%,
-    var(--gradient-mid-blue) 30%,
-    var(--gradient-mid-cream) 60%,
-    var(--gradient-bottom) 100%
+    #A7D4FF 0%,
+    #8EC7FF 15%,
+    #CFE8F9 30%,
+    #F0EACA 50%,
+    #E8D8A6 75%,
+    #E4C98F 100%
   );
 }
 
@@ -143,7 +145,7 @@
 }
 
 .volumetric-card {
-  border: 1.4px solid oklch(0.91 0.06 85);
+  border: 1.4px solid #EAD79A;
   box-shadow: 
     0 8px 24px rgba(0, 0, 0, 0.28),
     0 -2px 8px rgba(255, 255, 255, 0.38),
@@ -159,7 +161,7 @@
 
 .volumetric-card:hover {
   transform: translateY(-4px);
-  border-color: oklch(0.94 0.10 75);
+  border-color: #F4D98A;
   box-shadow: 
     0 12px 32px rgba(0, 0, 0, 0.32),
     0 -2px 10px rgba(255, 255, 255, 0.42),

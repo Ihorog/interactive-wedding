@@ -17,6 +17,7 @@ import {
   fileToDataURL,
   compressImage
 } from '@/lib/mediaStorage'
+import { inferSection, inferScene, inferMood, estimateQuality } from '@/lib/mediaProcessor'
 
 interface Message {
     id: string
@@ -75,11 +76,26 @@ export function AIChat({ isOpen, onToggle }: AIChatProps) {
         setIsProcessing(true)
 
         try {
-            const promptText = `Ти - помічник для управління весільним альбомом. 
-Користувач запитує: ${input}
+            const currentMedia = mediaItems || []
+            const sectionNames = ['ayakscho', 'razom', 'lyubyty', 'zhyttya', 'pospravzhnomu', 'radity', 'mriyaty']
+            const mediaSummary = sectionNames.map(s => {
+              const count = currentMedia.filter(m => m.section === s).length
+              return `${s}: ${count} файлів`
+            }).join(', ')
 
-Допоможи організувати фото, відео, події в календарі або знайти потрібний контент.
-Відповідай українською мовою, коротко та по суті.`
+            const promptText = `Ти — AI-адміністратор весільного альбому "Дмитро та Александра".
+Поточний стан альбому: ${mediaSummary}
+Усього медіафайлів: ${currentMedia.length}
+
+Ти вмієш:
+- Допомогти розподілити фото/відео по розділах: А якщо, Разом, Любити, Життя, По справжньому, Радіти, Мріяти
+- Знаходити медіа за тегами (наприклад: "знайди фото з першого танцю")
+- Давати поради щодо організації альбому
+- Пояснювати маркери якості фото (ok, warn_blur, warn_dark)
+
+Запит користувача: ${input}
+
+Відповідай українською, стисло та по суті. Якщо питання про конкретний розділ — назви його українською.`
             
             const response = await window.spark.llm(promptText, 'gpt-4o-mini')
 
@@ -148,6 +164,18 @@ export function AIChat({ isOpen, onToggle }: AIChatProps) {
                         size: file.size,
                         format: file.type
                     }
+                }
+
+                // Auto-assign section and markers using MediaProcessor
+                if (isImage || isVideo) {
+                    const autoSection = inferSection([], file.name)
+                    if (autoSection !== 'unassigned') {
+                        mediaItem.section = autoSection
+                    }
+                    const scene = inferScene([], mediaItem.section)
+                    const mood = inferMood([], mediaItem.section)
+                    const { quality } = estimateQuality(mediaItem.metadata)
+                    mediaItem.tags = [scene, mood, quality].filter(Boolean)
                 }
 
                 if (isVideo) {

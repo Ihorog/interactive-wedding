@@ -10,7 +10,7 @@ interface NavigationProps {
     onNavigate: (section: SectionId) => void
 }
 
-const sections: { id: SectionId; label: string; emoji: string }[] = [
+?const sections: { id: SectionId; label: string; emoji: string }[] = [
     { id: 'home', label: 'Головна', emoji: '🏠' },
     { id: 'ayakscho', label: 'А якщо', emoji: '✨' },
     { id: 'razom', label: 'Разом', emoji: '💍' },
@@ -103,24 +103,26 @@ export function Navigation({ currentSection, onNavigate }: NavigationProps) {
     }
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-md border-b border-border">
-            <div className="container mx-auto px-6 py-4">
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-card/85 backdrop-blur-md border-b border-[#EAD79A]">
+            <div className="container mx-auto px-6 py-3">
                 <div className="flex items-center justify-between">
                     <button
                         onClick={() => onNavigate('home')}
-                        className="font-display text-2xl font-bold text-primary hover:text-accent transition-colors"
+                        className="font-display text-xl font-bold text-[#D9B763] hover:text-[#E7C768] transition-colors flex items-center gap-2"
                     >
+                        <Heart size={18} weight="fill" />
                         Наш Альбом
                     </button>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                         {sections.slice(1).map((section) => (
                             <Button
                                 key={section.id}
                                 variant={currentSection === section.id ? 'default' : 'ghost'}
                                 size="sm"
                                 onClick={() => onNavigate(section.id)}
-                                className="font-ui text-xs"
+                                className={`font-ui text-xs ${currentSection === section.id ? 'bg-[#D9B763] hover:bg-[#E7C768] text-white' : 'text-[#4D4D4D] hover:text-[#2C2C2C]'}`}
                             >
+                                <span className="mr-1">{section.emoji}</span>
                                 {section.label}
                             </Button>
                         ))}
