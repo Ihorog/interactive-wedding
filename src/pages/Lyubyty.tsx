@@ -1,6 +1,7 @@
 import { Card } from '@/components/ui/card'
 import { MediaGallery } from '@/components/MediaGallery'
 import { VideoShowcase } from '@/components/VideoShowcase'
+import { BackgroundAudio } from '@/components/BackgroundAudio'
 import { Separator } from '@/components/ui/separator'
 import { motion } from 'framer-motion'
 import { Heart, Video } from '@phosphor-icons/react'
@@ -17,9 +18,12 @@ export function Lyubyty() {
 
     const videos = sectionMedia.filter(item => item.type === 'video')
     const photos = sectionMedia.filter(item => item.type === 'image')
+    const audioItems = sectionMedia.filter(item => item.type === 'audio')
 
     return (
         <div className="min-h-screen pt-28 pb-32 px-6">
+            <BackgroundAudio audioItems={audioItems} />
+
             <div className="container mx-auto max-w-6xl">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}

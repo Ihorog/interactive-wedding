@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
-import { X, Check, Trash, Image as ImageIcon, Video as VideoIcon } from '@phosphor-icons/react'
+import { X, Check, Trash, Image as ImageIcon, Video as VideoIcon, MusicNote } from '@phosphor-icons/react'
 import { useKV } from '@github/spark/hooks'
 import { toast } from 'sonner'
 import type { MediaItem } from '@/lib/mediaStorage'
@@ -163,6 +163,10 @@ export function MediaManager({ isOpen, onClose }: MediaManagerProps) {
                             </div>
                           )}
                         </>
+                      ) : item.type === 'audio' ? (
+                        <div className="w-full h-full flex items-center justify-center bg-primary/5">
+                          <MusicNote size={32} weight="duotone" className="text-primary" />
+                        </div>
                       ) : (
                         <img
                           src={item.dataUrl || item.url}
@@ -171,7 +175,7 @@ export function MediaManager({ isOpen, onClose }: MediaManagerProps) {
                         />
                       )}
                       <Badge className="absolute top-2 left-2 text-xs">
-                        {item.type === 'video' ? '🎥' : '📷'}
+                        {item.type === 'video' ? '🎥' : item.type === 'audio' ? '🎵' : '📷'}
                       </Badge>
                     </div>
                     <div className="p-2">
@@ -197,6 +201,15 @@ export function MediaManager({ isOpen, onClose }: MediaManagerProps) {
                         controls
                         className="w-full h-full object-cover"
                       />
+                    ) : selectedItem.type === 'audio' ? (
+                      <div className="w-full h-full flex flex-col items-center justify-center gap-4 bg-primary/5">
+                        <MusicNote size={48} weight="duotone" className="text-primary" />
+                        <audio
+                          src={selectedItem.dataUrl || selectedItem.url}
+                          controls
+                          className="w-full px-4"
+                        />
+                      </div>
                     ) : (
                       <img
                         src={selectedItem.dataUrl || selectedItem.url}

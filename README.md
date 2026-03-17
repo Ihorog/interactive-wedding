@@ -1,23 +1,52 @@
-# ✨ Welcome to Your Spark Template!
-You've just launched your brand-new Spark Template Codespace — everything’s fired up and ready for you to explore, build, and create with Spark!
+# 📷 Весільний Альбом — Дмитро та Александра
 
-This template is your blank canvas. It comes with a minimal setup to help you get started quickly with Spark development.
+Інтерактивний весільний альбом з AI-помічником, галереями та календарем подій.
 
-🚀 What's Inside?
-- A clean, minimal Spark environment
-- Pre-configured for local development
-- Ready to scale with your ideas
-  
-🧠 What Can You Do?
+## 📸 Куди покласти фото?
 
-Right now, this is just a starting point — the perfect place to begin building and testing your Spark applications.
+### Спосіб 1: Пряме розміщення у папці (для розробників)
 
-🧹 Just Exploring?
-No problem! If you were just checking things out and don’t need to keep this code:
+Покладіть фотографії у папку **`src/assets/images/`** — вони автоматично з'являться в альбомі:
 
-- Simply delete your Spark.
-- Everything will be cleaned up — no traces left behind.
+```
+src/
+  assets/
+    images/
+      ваше-фото-1.jpg   ← додайте сюди
+      ваше-фото-2.jpg
+      ваше-фото-3.jpg
+```
 
-📄 License For Spark Template Resources 
+**Підтримувані формати**: JPG, JPEG, PNG, GIF, WebP
 
-The Spark Template files and resources from GitHub are licensed under the terms of the MIT license, Copyright GitHub, Inc.
+Фотографії автоматично розподіляться між розділами альбому. Потім ви можете перерозподілити їх через Менеджер медіафайлів (іконка папки в AI-чаті).
+
+### Спосіб 2: Через AI-чат (для кінцевих користувачів)
+
+1. Натисніть іконку чату 💬 у правому нижньому куті
+2. Натисніть іконку скріпки 📎 для завантаження файлів
+3. Оберіть фото або відео (підтримується множинний вибір)
+4. Після завантаження — організуйте через Менеджер медіафайлів 📁
+
+Детальніше — у [UPLOAD_GUIDE.md](./UPLOAD_GUIDE.md)
+
+## 🗂️ Розділи альбому
+
+| Розділ | Опис |
+|--------|------|
+| **А якщо** | Підготовка, перші кроки |
+| **Разом** | Церемонія, розпис |
+| **Любити** | Романтичні моменти |
+| **Життя** | Неформальні миті |
+| **По справжньому** | Гості, родичі, вечірка |
+| **Радіти** | Емоційні піки, танці |
+| **Мріяти** | Побажання, майбутнє |
+
+## 🚀 Запуск
+
+```bash
+npm install
+npm run dev
+```
+
+📄 Ресурси Spark Template ліцензовані за умовами MIT License, Copyright GitHub, Inc.

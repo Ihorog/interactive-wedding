@@ -10,12 +10,14 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useKV } from '@github/spark/hooks'
 import { toast } from 'sonner'
 import type { MediaItem } from '@/lib/mediaStorage'
+import type { SectionId } from '@/App'
 import { 
   getVideoMetadata, 
   generateVideoThumbnail, 
   fileToDataURL,
   compressImage
 } from '@/lib/mediaStorage'
+import { inferSection, inferScene, inferMood, estimateQuality } from '@/lib/mediaProcessor'
 
 interface Message {
     id: string
@@ -27,6 +29,26 @@ interface Message {
 interface AIChatProps {
     isOpen: boolean
     onToggle: () => void
+}
+
+/**
+ * Infer a section ID from the file name using common naming conventions.
+ * Falls back to 'unassigned' when no pattern matches.
+ */
+const SECTION_PATTERNS: Array<{ pattern: RegExp; section: SectionId }> = [
+    { pattern: /\b(ayakscho|yakshcho|preparation|prep|getting.?ready|bride.?prep|groom.?prep)\b/, section: 'ayakscho' },
+    { pattern: /\b(razom|ceremony|altar|church|vow|ring|wedding.?day|walk.?down|aisle)\b/, section: 'razom' },
+    { pattern: /\b(lyubyty|love|romantic|kiss|couple|portrait|duo|together)\b/, section: 'lyubyty' },
+    { pattern: /\b(zhyttya|life|casual|family|kids|everyday|candid|behind)\b/, section: 'zhyttya' },
+    { pattern: /\b(pospravzhnomu|guest|celebration|banquet|party|reception|toast|dance)\b/, section: 'pospravzhnomu' },
+    { pattern: /\b(radity|emotion|laugh|joy|fun|happy|reaction|highlight)\b/, section: 'radity' },
+    { pattern: /\b(mriyaty|dream|wish|future|sunset|sky|night|star)\b/, section: 'mriyaty' },
+]
+
+function inferSectionFromFileName(fileName: string): SectionId | 'unassigned' {
+    const name = fileName.toLowerCase()
+    const match = SECTION_PATTERNS.find(({ pattern }) => pattern.test(name))
+    return match ? match.section : 'unassigned'
 }
 
 export function AIChat({ isOpen, onToggle }: AIChatProps) {
@@ -54,11 +76,26 @@ export function AIChat({ isOpen, onToggle }: AIChatProps) {
         setIsProcessing(true)
 
         try {
-            const promptText = `Ти - помічник для управління весільним альбомом. 
-Користувач запитує: ${input}
+            const currentMedia = mediaItems || []
+            const sectionNames = ['ayakscho', 'razom', 'lyubyty', 'zhyttya', 'pospravzhnomu', 'radity', 'mriyaty']
+            const mediaSummary = sectionNames.map(s => {
+              const count = currentMedia.filter(m => m.section === s).length
+              return `${s}: ${count} файлів`
+            }).join(', ')
 
-Допоможи організувати фото, відео, події в календарі або знайти потрібний контент.
-Відповідай українською мовою, коротко та по суті.`
+            const promptText = `Ти — AI-адміністратор весільного альбому "Дмитро та Александра".
+Поточний стан альбому: ${mediaSummary}
+Усього медіафайлів: ${currentMedia.length}
+
+Ти вмієш:
+- Допомогти розподілити фото/відео по розділах: А якщо, Разом, Любити, Життя, По справжньому, Радіти, Мріяти
+- Знаходити медіа за тегами (наприклад: "знайди фото з першого танцю")
+- Давати поради щодо організації альбому
+- Пояснювати маркери якості фото (ok, warn_blur, warn_dark)
+
+Запит користувача: ${input}
+
+Відповідай українською, стисло та по суті. Якщо питання про конкретний розділ — назви його українською.`
             
             const response = await window.spark.llm(promptText, 'gpt-4o-mini')
 
@@ -105,8 +142,9 @@ export function AIChat({ isOpen, onToggle }: AIChatProps) {
 
                 const isVideo = file.type.startsWith('video/')
                 const isImage = file.type.startsWith('image/')
+                const isAudio = file.type.startsWith('audio/')
 
-                if (!isVideo && !isImage) {
+                if (!isVideo && !isImage && !isAudio) {
                     toast.error(`Файл ${file.name} пропущено - непідтримуваний формат`)
                     continue
                 }
@@ -118,14 +156,26 @@ export function AIChat({ isOpen, onToggle }: AIChatProps) {
 
                 let mediaItem: MediaItem = {
                     id: `media-${Date.now()}-${i}`,
-                    type: isVideo ? 'video' : 'image',
-                    section: 'unassigned',
+                    type: isVideo ? 'video' : isAudio ? 'audio' : 'image',
+                    section: inferSectionFromFileName(file.name),
                     title: file.name.replace(/\.[^/.]+$/, ''),
                     uploadedAt: Date.now(),
                     metadata: {
                         size: file.size,
                         format: file.type
                     }
+                }
+
+                // Auto-assign section and markers using MediaProcessor
+                if (isImage || isVideo) {
+                    const autoSection = inferSection([], file.name)
+                    if (autoSection !== 'unassigned') {
+                        mediaItem.section = autoSection
+                    }
+                    const scene = inferScene([], mediaItem.section)
+                    const mood = inferMood([], mediaItem.section)
+                    const { quality } = estimateQuality(mediaItem.metadata)
+                    mediaItem.tags = [scene, mood, quality].filter(Boolean)
                 }
 
                 if (isVideo) {
@@ -158,6 +208,15 @@ export function AIChat({ isOpen, onToggle }: AIChatProps) {
                         console.error('Image processing error:', error)
                         const dataUrl = await fileToDataURL(file)
                         mediaItem.dataUrl = dataUrl
+                    }
+                } else if (isAudio) {
+                    try {
+                        const dataUrl = await fileToDataURL(file)
+                        mediaItem.dataUrl = dataUrl
+                    } catch (error) {
+                        console.error('Audio processing error:', error)
+                        toast.error(`Помилка обробки аудіо ${file.name}`)
+                        continue
                     }
                 }
 
@@ -346,7 +405,7 @@ export function AIChat({ isOpen, onToggle }: AIChatProps) {
                                         ref={fileInputRef}
                                         type="file"
                                         multiple
-                                        accept="image/*,video/*"
+                                        accept="image/*,video/*,audio/*"
                                         onChange={handleFileChange}
                                         className="hidden"
                                     />

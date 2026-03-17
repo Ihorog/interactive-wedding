@@ -1,10 +1,6 @@
 import { useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import type { MediaItem } from '@/lib/mediaStorage'
-import img1 from '@/assets/images/20241001_203159.jpg'
-import img2 from '@/assets/images/_DSC5040.JPG'
-import img3 from '@/assets/images/_DSC5146.JPG'
-import img4 from '@/assets/images/_DSC5161.JPG'
 
 const samplePhotos: MediaItem[] = [
   {
@@ -287,9 +283,14 @@ export function useSamplePhotos() {
 
   useEffect(() => {
     if (!mediaItems || mediaItems.length === 0) {
-      setMediaItems(samplePhotos)
+      const samplePhotos = buildSamplePhotos()
+      const sampleAudio = buildSampleAudio()
+      const all = [...samplePhotos, ...sampleAudio]
+      if (all.length > 0) {
+        setMediaItems(all)
+      }
     }
-  }, [])
+  }, [mediaItems, setMediaItems])
 
   return { mediaItems, setMediaItems }
 }

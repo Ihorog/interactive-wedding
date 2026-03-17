@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Офлайн — Весільний Альбом</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: linear-gradient(187deg, #A7D4FF 0%, #CFE8F9 30%, #F0EACA 60%, #E8D8A6 100%);
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .card {
+      background: rgba(255, 248, 225, 0.9);
+      border: 1.4px solid #EAD79A;
+      border-radius: 1.25rem;
+      padding: 3rem 2.5rem;
+      max-width: 420px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18), 0 -2px 8px rgba(255,255,255,0.38), 3px 0 12px rgba(243,210,123,0.42);
+    }
+    .emoji { font-size: 4rem; display: block; margin-bottom: 1.5rem; }
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #2C2C2C;
+      margin-bottom: 0.75rem;
+    }
+    p {
+      color: #4D4D4D;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .hint {
+      font-size: 0.9rem;
+      color: #888;
+      font-style: italic;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.75rem 2rem;
+      background: #D9B763;
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #E7C768; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <span class="emoji">💐</span>
+    <h1>Ви офлайн</h1>
+    <p>Здається, ви не підключені до інтернету. Альбом завантажується, як тільки з'явиться з'єднання.</p>
+    <p class="hint">Раніше переглянуті сторінки доступні в кеші.</p>
+    <a href="/" class="btn" onclick="location.reload(); return false;">Спробувати ще раз</a>
+  </div>
+</body>
+</html>
