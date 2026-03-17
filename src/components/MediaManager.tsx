@@ -32,7 +32,16 @@ const sections = [
 
 const predefinedTags = [
   'ceremony', 'preparation', 'romantic', 'casual', 'guests', 
-  'celebration', 'future', 'dance', 'kiss', 'rings', 'family'
+  'celebration', 'future', 'dance', 'kiss', 'rings', 'family',
+  'beginning', 'excitement', 'details', 'emotions', 'bride', 'groom',
+  'anticipation', 'vows', 'solemn', 'promises', 'unity', 'official',
+  'signing', 'witnesses', 'married', 'joy', 'tender', 'intimacy',
+  'embrace', 'love', 'first-kiss', 'emotion', 'connection', 'wordless',
+  'genuine', 'natural', 'spontaneous', 'authentic', 'relaxed', 'candid',
+  'life', 'unplanned', 'real', 'parents', 'relatives', 'support',
+  'friends', 'party', 'toasts', 'wishes', 'speeches', 'first-dance',
+  'special', 'fun', 'dancing', 'energy', 'happiness', 'laughter',
+  'dreams', 'hopes', 'plans', 'goals', 'journey', 'together', 'adventure'
 ]
 
 export function MediaManager({ isOpen, onClose }: MediaManagerProps) {
