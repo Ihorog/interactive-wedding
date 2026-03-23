@@ -1,0 +1,6 @@
+# Python dependencies for scripts/process_media.py
+# Install with: pip install -r scripts/requirements.txt
+opencv-python-headless>=4.8.0
+Pillow>=10.0.0
+moviepy>=1.0.3
+numpy>=1.24.0
