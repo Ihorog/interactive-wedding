@@ -4,8 +4,14 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    versioning-strategy: auto
 
   - package-ecosystem: "devcontainers"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
