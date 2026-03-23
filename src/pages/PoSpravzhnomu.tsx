@@ -4,16 +4,13 @@ import { GuestWishesGallery } from '@/components/GuestWishesGallery'
 import { Separator } from '@/components/ui/separator'
 import { motion } from 'framer-motion'
 import { Users, Video } from '@phosphor-icons/react'
-import { useKV } from '@github/spark/hooks'
-import type { MediaItem } from '@/lib/mediaStorage'
+import { useContext } from 'react'
+import { ManifestContext } from '@/hooks/useManifest'
 
 export function PoSpravzhnomu() {
-    const [mediaItems] = useKV<MediaItem[]>('wedding-media', [])
+    const mediaItems = useContext(ManifestContext)
     
-    const sectionMedia = mediaItems?.filter(item => 
-        item.section === 'pospravzhnomu' || 
-        (item.section === 'unassigned' && item.tags?.includes('guests'))
-    ) || []
+    const sectionMedia = mediaItems.filter(item => item.section === 'По справжньому')
 
     const videos = sectionMedia.filter(item => item.type === 'video')
     const photos = sectionMedia.filter(item => item.type === 'image')

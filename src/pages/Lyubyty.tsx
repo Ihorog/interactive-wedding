@@ -5,16 +5,13 @@ import { BackgroundAudio } from '@/components/BackgroundAudio'
 import { Separator } from '@/components/ui/separator'
 import { motion } from 'framer-motion'
 import { Heart, Video } from '@phosphor-icons/react'
-import { useKV } from '@github/spark/hooks'
-import type { MediaItem } from '@/lib/mediaStorage'
+import { useContext } from 'react'
+import { ManifestContext } from '@/hooks/useManifest'
 
 export function Lyubyty() {
-    const [mediaItems] = useKV<MediaItem[]>('wedding-media', [])
+    const mediaItems = useContext(ManifestContext)
     
-    const sectionMedia = mediaItems?.filter(item => 
-        item.section === 'lyubyty' || 
-        (item.section === 'unassigned' && item.tags?.includes('romantic'))
-    ) || []
+    const sectionMedia = mediaItems.filter(item => item.section === 'Любити')
 
     const videos = sectionMedia.filter(item => item.type === 'video')
     const photos = sectionMedia.filter(item => item.type === 'image')

@@ -4,16 +4,13 @@ import { ParallaxGallery } from '@/components/ParallaxGallery'
 import { Separator } from '@/components/ui/separator'
 import { motion } from 'framer-motion'
 import { Star, Video } from '@phosphor-icons/react'
-import { useKV } from '@github/spark/hooks'
-import type { MediaItem } from '@/lib/mediaStorage'
+import { useContext } from 'react'
+import { ManifestContext } from '@/hooks/useManifest'
 
 export function Radity() {
-    const [mediaItems] = useKV<MediaItem[]>('wedding-media', [])
+    const mediaItems = useContext(ManifestContext)
     
-    const sectionMedia = mediaItems?.filter(item => 
-        item.section === 'radity' || 
-        (item.section === 'unassigned' && item.tags?.includes('celebration'))
-    ) || []
+    const sectionMedia = mediaItems.filter(item => item.section === 'Радіти')
 
     const videos = sectionMedia.filter(item => item.type === 'video')
     const photos = sectionMedia.filter(item => item.type === 'image')
