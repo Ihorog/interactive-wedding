@@ -11,15 +11,14 @@ import { CalendarWidget } from './components/CalendarWidget'
 import { AIChat } from './components/AIChat'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useSamplePhotos } from './hooks/useSamplePhotos'
+import { useManifest, ManifestContext } from './hooks/useManifest'
 
 export type SectionId = 'home' | 'ayakscho' | 'razom' | 'lyubyty' | 'zhyttya' | 'pospravzhnomu' | 'radity' | 'mriyaty'
 
 function App() {
     const [currentSection, setCurrentSection] = useState<SectionId>('home')
     const [isChatOpen, setIsChatOpen] = useState(false)
-    
-    useSamplePhotos()
+    const { items } = useManifest()
 
     const renderSection = () => {
         switch (currentSection) {
@@ -45,6 +44,7 @@ function App() {
     }
 
     return (
+        <ManifestContext.Provider value={items}>
         <div className="min-h-screen gradient-wedding-bg relative overflow-x-hidden">
             <Navigation currentSection={currentSection} onNavigate={setCurrentSection} />
             
@@ -67,6 +67,7 @@ function App() {
 
             <AIChat isOpen={isChatOpen} onToggle={() => setIsChatOpen(!isChatOpen)} />
         </div>
+        </ManifestContext.Provider>
     )
 }
 

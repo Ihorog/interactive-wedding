@@ -1,10 +1,9 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
 import { VideoPlayer } from '@/components/VideoPlayer'
-import { Image, Play, MusicNote, CaretLeft, CaretRight } from '@phosphor-icons/react'
+import { Image, Play, MusicNote, CaretLeft, CaretRight, ArrowsOut, ArrowsIn } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import type { MediaItem } from '@/lib/mediaStorage'
 
@@ -12,10 +11,13 @@ interface MediaGalleryProps {
   items: MediaItem[]
   columns?: number
   className?: string
+  section?: string
 }
 
-export function MediaGallery({ items, columns = 3, className = '' }: MediaGalleryProps) {
+export function MediaGallery({ items, columns = 3, className = '', section }: MediaGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const dialogContentRef = useRef<HTMLDivElement>(null)
   const selectedItem = selectedIndex !== null ? items[selectedIndex] : null
 
   const openItem = (index: number) => setSelectedIndex(index)
@@ -41,6 +43,22 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [selectedIndex, goNext, goPrev])
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement)
+    }
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
+  }, [])
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      dialogContentRef.current?.requestFullscreen?.().catch(() => {})
+    } else {
+      document.exitFullscreen?.().catch(() => {})
+    }
+  }
 
   const getGridCols = () => {
     switch (columns) {
@@ -73,6 +91,11 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
 
   return (
     <>
+      {section && (
+        <span className="font-ui text-xs uppercase tracking-widest text-primary/70 mb-4 block">
+          {section}
+        </span>
+      )}
       <div className={`grid ${getGridCols()} gap-6 ${className}`}>
         {items.map((item, index) => (
           <motion.div
@@ -93,9 +116,10 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
                         src={item.thumbnail}
                         alt={item.title || 'Video thumbnail'}
                         className="w-full h-full object-cover"
+                        loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-black/60 to-black/40">
                         <Play size={48} weight="duotone" className="text-primary" />
                       </div>
                     )}
@@ -113,11 +137,7 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
                     </p>
                   </div>
                 ) : (
-                  <img
-                    src={item.dataUrl || item.url}
-                    alt={item.title || 'Image'}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+                  <ImageCard src={item.dataUrl || item.url} alt={item.title || 'Image'} />
                 )}
               </div>
 
@@ -140,6 +160,21 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
 
       <Dialog open={selectedIndex !== null} onOpenChange={(open) => { if (!open) closeItem() }}>
         <DialogContent className="max-w-5xl p-0 border-none bg-transparent">
+          <div ref={dialogContentRef} className="relative space-y-4">
+            {/* Fullscreen toggle */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleFullscreen}
+              aria-label={isFullscreen ? 'Вийти з повноекранного режиму' : 'Повноекранний режим'}
+              className="absolute top-2 right-2 z-20 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white border-none"
+            >
+              {isFullscreen
+                ? <ArrowsIn size={20} weight="bold" />
+                : <ArrowsOut size={20} weight="bold" />
+              }
+            </Button>
+
           {selectedItem && (
             <div className="space-y-4">
               {/* Navigation arrows */}
@@ -194,6 +229,7 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
                     src={selectedItem.dataUrl || selectedItem.url}
                     alt={selectedItem.title || 'Image'}
                     className="w-full max-h-[80vh] object-contain"
+                    loading="lazy"
                   />
                 </Card>
               )}
@@ -231,8 +267,32 @@ export function MediaGallery({ items, columns = 3, className = '' }: MediaGaller
               )}
             </div>
           )}
+          </div>
         </DialogContent>
       </Dialog>
     </>
+  )
+}
+
+interface ImageCardProps {
+  src?: string
+  alt: string
+}
+
+function ImageCard({ src, alt }: ImageCardProps) {
+  const [loaded, setLoaded] = useState(false)
+  return (
+    <div className="relative w-full h-full">
+      {!loaded && (
+        <div className="absolute inset-0 animate-pulse bg-muted rounded" />
+      )}
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        onLoad={() => setLoaded(true)}
+        className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+      />
+    </div>
   )
 }

@@ -4,16 +4,13 @@ import { VideoShowcase } from '@/components/VideoShowcase'
 import { Separator } from '@/components/ui/separator'
 import { motion } from 'framer-motion'
 import { Heart, Video } from '@phosphor-icons/react'
-import { useKV } from '@github/spark/hooks'
-import type { MediaItem } from '@/lib/mediaStorage'
+import { useContext } from 'react'
+import { ManifestContext } from '@/hooks/useManifest'
 
 export function Razom() {
-    const [mediaItems] = useKV<MediaItem[]>('wedding-media', [])
+    const mediaItems = useContext(ManifestContext)
     
-    const sectionMedia = mediaItems?.filter(item => 
-        item.section === 'razom' || 
-        (item.section === 'unassigned' && item.tags?.includes('ceremony'))
-    ) || []
+    const sectionMedia = mediaItems.filter(item => item.section === 'Разом')
 
     const videos = sectionMedia.filter(item => item.type === 'video')
     const photos = sectionMedia.filter(item => item.type === 'image')

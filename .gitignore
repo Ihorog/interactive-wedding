@@ -32,3 +32,20 @@ pids
 .devcontainer/
 
 .spark-workbench-id
+
+# Raw wedding media sources (40GB — never commit)
+D:/OneDrive/mer/
+D:\material_wedding\
+source_raw/
+*.dng
+*.raw
+*.cr2
+*.nef
+*.arw
+*.tmp
+venv/
+__pycache__/
+*.pyc
+.idea/
+.gradle/
+android/

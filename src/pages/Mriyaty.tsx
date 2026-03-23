@@ -5,16 +5,13 @@ import { YouTubeLinksManager, WishesSection } from '@/components/WeddingWishes'
 import { Separator } from '@/components/ui/separator'
 import { motion } from 'framer-motion'
 import { Gift, Video } from '@phosphor-icons/react'
-import { useKV } from '@github/spark/hooks'
-import type { MediaItem } from '@/lib/mediaStorage'
+import { useContext } from 'react'
+import { ManifestContext } from '@/hooks/useManifest'
 
 export function Mriyaty() {
-    const [mediaItems] = useKV<MediaItem[]>('wedding-media', [])
+    const mediaItems = useContext(ManifestContext)
     
-    const sectionMedia = mediaItems?.filter(item => 
-        item.section === 'mriyaty' || 
-        (item.section === 'unassigned' && item.tags?.includes('future'))
-    ) || []
+    const sectionMedia = mediaItems.filter(item => item.section === 'Мріяти')
 
     const videos = sectionMedia.filter(item => item.type === 'video')
     const photos = sectionMedia.filter(item => item.type === 'image')

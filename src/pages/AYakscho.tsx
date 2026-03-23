@@ -4,8 +4,8 @@ import { VideoShowcase } from '@/components/VideoShowcase'
 import { Separator } from '@/components/ui/separator'
 import { motion } from 'framer-motion'
 import { Sparkle, Video, Clock } from '@phosphor-icons/react'
-import { useKV } from '@github/spark/hooks'
-import type { MediaItem } from '@/lib/mediaStorage'
+import { useContext } from 'react'
+import { ManifestContext } from '@/hooks/useManifest'
 
 const timelineSteps = [
     { emoji: '💍', label: 'Заручини', description: 'Початок нашої спільної мандрівки' },
@@ -16,12 +16,9 @@ const timelineSteps = [
 ]
 
 export function AYakscho() {
-    const [mediaItems] = useKV<MediaItem[]>('wedding-media', [])
+    const mediaItems = useContext(ManifestContext)
     
-    const sectionMedia = mediaItems?.filter(item => 
-        item.section === 'ayakscho' || 
-        (item.section === 'unassigned' && item.tags?.includes('preparation'))
-    ) || []
+    const sectionMedia = mediaItems.filter(item => item.section === 'А якщо')
 
     const videos = sectionMedia.filter(item => item.type === 'video')
     const photos = sectionMedia.filter(item => item.type === 'image')
