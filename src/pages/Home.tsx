@@ -253,7 +253,7 @@ export function Home({ onNavigate }: HomeProps) {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {sections.map((section, index) => {
-                const Icon = section.icon
+                // icon via section.icon
                 return (
                   <motion.div
                     key={section.id}

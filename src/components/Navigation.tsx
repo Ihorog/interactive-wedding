@@ -10,7 +10,7 @@ interface NavigationProps {
     onNavigate: (section: SectionId) => void
 }
 
-?const sections: { id: SectionId; label: string; emoji: string }[] = [
+const sections: { id: SectionId; label: string; emoji: string }[] = [
     { id: 'home', label: 'Головна', emoji: '🏠' },
     { id: 'ayakscho', label: 'А якщо', emoji: '✨' },
     { id: 'razom', label: 'Разом', emoji: '💍' },
