@@ -18,6 +18,7 @@ import {
   compressImage
 } from '@/lib/mediaStorage'
 import { inferSection, inferScene, inferMood, estimateQuality } from '@/lib/mediaProcessor'
+import { generateResponse } from '@/services/geminiService'
 
 interface Message {
     id: string
@@ -97,7 +98,7 @@ export function AIChat({ isOpen, onToggle }: AIChatProps) {
 
 Відповідай українською, стисло та по суті. Якщо питання про конкретний розділ — назви його українською.`
             
-            const response = await window.spark.llm(promptText, 'gpt-4o-mini')
+            const response = await generateResponse(promptText)
 
             const assistantMessage: Message = {
                 id: (Date.now() + 1).toString(),
@@ -247,7 +248,7 @@ export function AIChat({ isOpen, onToggle }: AIChatProps) {
 
                 setIsProcessing(true)
                 try {
-                    const response = await window.spark.llm(promptText, 'gpt-4o-mini')
+                    const response = await generateResponse(promptText)
                     const assistantMessage: Message = {
                         id: (Date.now() + 1).toString(),
                         role: 'assistant',
