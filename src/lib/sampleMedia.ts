@@ -33,13 +33,15 @@ export function buildSamplePhotos(): MediaItem[] {
     },
   ]
 
+  const SAMPLE_BASE_TIMESTAMP = 1700000000000
+
   return samples.map((s, i) => ({
     id: `sample-photo-${i + 1}`,
     type: 'image' as const,
     section: s.section,
     title: s.title,
     url: s.url,
-    uploadedAt: Date.now(),
+    uploadedAt: SAMPLE_BASE_TIMESTAMP + i,
     tags: s.tags,
   }))
 }
