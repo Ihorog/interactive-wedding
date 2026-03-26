@@ -3,6 +3,7 @@ import type { MediaItem } from '@/lib/mediaStorage'
 
 export interface ManifestItem {
   section: string
+  slug?: string
   file: string
   type: 'video' | 'image'
 }
@@ -27,7 +28,7 @@ async function loadManifest(signal: AbortSignal): Promise<MediaItem[]> {
     id: `manifest_${raw.section}_${raw.file}`,
     type: raw.type,
     section: raw.section,
-    url: `./media/${raw.section}/${raw.file}`,
+    url: `./media/${raw.slug ?? raw.section}/${raw.file}`,
     uploadedAt: now,
   }))
 }
